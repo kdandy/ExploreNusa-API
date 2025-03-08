@@ -1,0 +1,27 @@
+{
+  "name": "nusaventure-backend",
+  "scripts": {
+    "dev": "bun run --hot src/index.tsx",
+    "start": "bun run src/index.tsx",
+    "generate": "prisma generate",
+    "seed": "prisma db seed",
+    "studio": "prisma studio",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "docker:up": "docker compose up -d"
+  },
+  "prisma": {
+    "seed": "bun run prisma/seeders/index.ts"
+  },
+  "dependencies": {
+    "@hono/swagger-ui": "^0.3.0",
+    "@hono/zod-openapi": "^0.14.9",
+    "@prisma/client": "^5.18.0",
+    "hono": "^4.5.4",
+    "oslo": "^1.2.1"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prisma": "^5.18.0"
+  }
+}
