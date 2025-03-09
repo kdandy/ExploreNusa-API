@@ -3,14 +3,14 @@ export function WelcomePage() {
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
       <div className="bg-white shadow-md rounded-lg p-8 max-w-4xl w-full">
         <h1 className="text-4xl font-bold text-gray-900 mb-4 text-center">
-          Welcome to Nusaventure REST API
+          Welcome to Explorenusa REST API
         </h1>
         <p className="text-lg text-gray-700 mb-6">
-          Nusaventure helps you discover captivating tourist destinations and
+          Explorenusa helps you discover captivating tourist destinations and
           culinary delights in Nusantara.
         </p>
         <p className="text-lg text-gray-700 mb-6">
-          The OpenAPI Specification for the Nusaventure API offers a detailed
+          The OpenAPI Specification for the Explorenusa API offers a detailed
           description of the API's services. It can be accessed at the path{" "}
           <code className="bg-gray-200 rounded px-2 py-1">/api-spec</code>.
         </p>

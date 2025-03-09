@@ -26,9 +26,9 @@ app.doc31("/api-spec", {
   openapi: "3.0.0",
   info: {
     version: "1.0.0",
-    title: "Nusaventure REST API",
+    title: "Explorenusa REST API",
     description:
-      "Nusaventure helps you discover captivating tourist destinations and culinary delights in Nusantara.\n\nNusaventure, short for Nusantara Adventure, is a platform that inspires exploration of various legendary tourist spots, delicious culinary varieties, interesting activities and events, understanding the ecosystem and communities, and more.",
+      "Explorenusa helps you discover captivating tourist destinations and culinary delights in Nusantara.\n\nExplorenusa, short for Nusantara Adventure, is a platform that inspires exploration of various legendary tourist spots, delicious culinary varieties, interesting activities and events, understanding the ecosystem and communities, and more.",
   },
 });
 
@@ -63,10 +63,10 @@ app.get("/", (c) =>
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Welcome to Nusaventure REST API</title>
+        <title>Welcome to Explorenusa REST API</title>
         <meta
           name="description"
-          content="Nusaventure helps you discover captivating tourist destinations and culinary delights in Nusantara."
+          content="Explorenusa helps you discover captivating tourist destinations and culinary delights in Nusantara."
         />
         <script src="https://cdn.tailwindcss.com"></script>
       </head>

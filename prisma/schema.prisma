@@ -8,247 +8,202 @@ datasource db {
 }
 
 model Country {
-  id        String   @id @default(cuid())
+  id String @id @default(cuid())
+
   name      String
-  imageUrl  String
+  imageUrl  String @db.Text
   latitude  Float
   longitude Float
   zoom      Float
+
+  islands Island[]
+  states  State[]
+  cities  City[]
+  places  Place[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-  cities    City[]
-  islands   Island[]
-  places    Place[]
-  states    State[]
 
   @@map("countries")
 }
 
 model Island {
-  id        String   @id @default(cuid())
+  id String @id @default(cuid())
+
   name      String
-  imageUrl  String
+  imageUrl  String @db.Text
   latitude  Float
   longitude Float
   zoom      Float
-  slug      String   @unique
+  slug      String @unique
+
+  country   Country @relation(fields: [countryId], references: [id])
   countryId String
+  states    State[]
+  cities    City[]
+  places    Place[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-  cities    City[]
-  country   Country  @relation(fields: [countryId], references: [id])
-  places    Place[]
-  states    State[]
 
   @@map("islands")
 }
 
 model State {
-  id        String   @id @default(cuid())
-  countryId String
+  id String @id @default(cuid())
+
   name      String
-  imageUrl  String
+  imageUrl  String @db.Text
   latitude  Float
   longitude Float
   zoom      Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+
+  island    Island? @relation(fields: [islandId], references: [id])
   islandId  String?
+  countryId String
+  country   Country @relation(fields: [countryId], references: [id])
   cities    City[]
   places    Place[]
-  country   Country  @relation(fields: [countryId], references: [id])
-  island    Island?  @relation(fields: [islandId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@map("states")
 }
 
 model City {
-  id        String   @id @default(cuid())
-  countryId String
-  stateId   String
+  id String @id @default(cuid())
+
   name      String
-  imageUrl  String
+  imageUrl  String @db.Text
   latitude  Float
   longitude Float
   zoom      Float
+
+  country   Country @relation(fields: [countryId], references: [id])
+  countryId String
+  state     State   @relation(fields: [stateId], references: [id])
+  stateId   String
+  Island    Island? @relation(fields: [islandId], references: [id])
+  islandId  String?
+  places    Place[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-  islandId  String?
-  country   Country  @relation(fields: [countryId], references: [id])
-  Island    Island?  @relation(fields: [islandId], references: [id])
-  state     State    @relation(fields: [stateId], references: [id])
-  places    Place[]
 
   @@map("cities")
 }
 
 model Category {
-  id         String   @id @default(cuid())
-  slug       String   @unique
+  id String @id @default(cuid())
+
+  slug       String  @unique
   name       String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
-  isFeatured Boolean  @default(false)
+  isFeatured Boolean @default(false)
   position   Int?
-  places     Place[]  @relation("CategoryToPlace")
+
+  places Place[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@map("categories")
 }
 
 model Place {
-  id          String       @id @default(cuid())
-  countryId   String
-  stateId     String
-  cityId      String
+  id String @id @default(cuid())
+
   title       String
-  slug        String       @unique
-  description String
-  imageUrl    String
+  slug        String  @unique
+  description String  @db.Text
+  imageUrl    String  @db.Text
   latitude    Float
   longitude   Float
   zoom        Float
-  address     String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @default(now()) @updatedAt
-  islandId    String?
-  isFeatured  Boolean      @default(false)
+  address     String  @db.Text
+  isFeatured  Boolean @default(false)
   position    Int?
-  images      PlaceImage[]
-  city        City         @relation(fields: [cityId], references: [id])
-  country     Country      @relation(fields: [countryId], references: [id])
-  island      Island?      @relation(fields: [islandId], references: [id])
-  state       State        @relation(fields: [stateId], references: [id])
-  savedPlace  SavedPlace[]
-  categories  Category[]   @relation("CategoryToPlace")
+
+  country   Country      @relation(fields: [countryId], references: [id])
+  countryId String
+  state     State        @relation(fields: [stateId], references: [id])
+  stateId   String
+  city      City         @relation(fields: [cityId], references: [id])
+  cityId    String
+  island    Island?      @relation(fields: [islandId], references: [id])
+  islandId  String?
+  images    PlaceImage[]
+
+  categories Category[]
+  savedPlace SavedPlace[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@index([isFeatured, countryId, islandId, stateId, cityId])
-  @@index([position])
+  @@index([position(sort: Asc)])
   @@map("places")
 }
 
 model PlaceImage {
-  id          String   @id @default(cuid())
-  placeId     String
-  url         String
+  id String @id @default(cuid())
+
+  url         String @db.Text
   title       String
-  description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
-  place       Place    @relation(fields: [placeId], references: [id])
+  description String @db.Text
+
+  place   Place  @relation(fields: [placeId], references: [id])
+  placeId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@map("placeImages")
 }
 
 model User {
-  id         String       @id @default(cuid())
-  username   String       @unique
-  email      String       @unique
-  firstName  String
-  lastName   String
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  password   Password?
+  id String @id @default(cuid())
+
+  username  String @unique
+  email     String @unique
+  firstName String
+  lastName  String
+
+  password Password?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   savedPlace SavedPlace[]
 
   @@map("users")
 }
 
 model Password {
-  id        String   @id @default(cuid())
-  hash      String
-  userId    String   @unique
+  id String @id @default(cuid())
+
+  hash String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
 
   @@map("passwords")
 }
 
 model SavedPlace {
-  id        String   @id @default(cuid())
-  placeId   String?
-  userId    String?
+  id String @id @default(cuid())
+
+  place   Place?  @relation(fields: [placeId], references: [id])
+  placeId String?
+  user    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  place     Place?   @relation(fields: [placeId], references: [id])
-  user      User?    @relation(fields: [userId], references: [id])
 
   @@unique([placeId, userId])
   @@map("savedPlace")
-}
-
-model Category {
-  id        String   @id
-  name      String
-  slug      String   @unique @default("")
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-  Recipe    Recipe[]
-}
-
-model Ingredient {
-  id             String           @id
-  name           String
-  slug           String           @unique @default("")
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @default(now())
-  IngredientItem IngredientItem[]
-}
-
-model IngredientItem {
-  id           String     @id
-  ingredientId String
-  quantity     Float
-  measurement  String
-  sequence     Int        @default(0)
-  Ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
-  Recipe       Recipe[]
-}
-
-model Password {
-  id     String @id
-  hash   String
-  userId String @unique
-  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Recipe {
-  id             String           @id
-  name           String
-  description    String
-  cookingTime    String?
-  imageURL       String
-  slug           String           @unique @db.VarChar(255)
-  userId         String
-  instructions   Json?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime
-  User           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  SavedRecipe    SavedRecipe[]
-  Category       Category[]
-  IngredientItem IngredientItem[]
-}
-
-model SavedRecipe {
-  id        String   @id
-  userId    String
-  recipeId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-  Recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model User {
-  id          String        @id
-  username    String        @unique
-  fullname    String?
-  email       String        @unique
-  imageURL    String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime
-  description String?
-  Password    Password?
-  Recipe      Recipe[]
-  SavedRecipe SavedRecipe[]
 }

@@ -1,6 +1,6 @@
 services:
   # backend:
-  #   image: nusaventure-backend
+  #   image: explorenusa
   #   build:
   #     context: .
   #   ports:
